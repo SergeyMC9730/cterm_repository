@@ -1,3 +1,1 @@
-{
-	"modules": ["cterm_generic", "cterm_extensions", "cterm_tests"]
-}
+{"modules":["cterm_generic","cterm_extensions","cterm_tests"]}
