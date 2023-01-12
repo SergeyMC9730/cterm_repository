@@ -6,16 +6,35 @@ var print_usage = () => {
     console.log("Usage:\n - --module=<path to module>\n - --tdir=<compiled tools dir>\n - --arch=<module architecture (optional)>\n - --mname=<module name (with arch option)>\n - --mver=<module version (wth arch option)>");
     process.exit(0);
 }
+var is_undefined = (v) => {
+	var str = `${v}`;
+	if(str == "undefined") return true;
+	return false;
+}
+var filter_string = (str) => {
+	var i = 0;
 
-if(!args.module || !args.tdir) print_usage();
+	var str2 = str.split('');
+	var str3 = "";
 
-if(args.arch && (!args.mname || !args.mver)) {
+	str2.forEach((sym) => {
+		if(sym.charCodeAt(0) != 10) {
+			str3 += sym;
+		}
+	});
+
+	return str3;
+}
+
+if(is_undefined(args.module) || is_undefined(args.tdir)) print_usage();
+
+if(args.arch && (is_undefined(args.mname) || is_undefined(args.mver))) {
     print_usage();
 }
 
 var arch, mname, mver;
 
-if(!args.arch && !arch.mname && !arch.mver) {
+if(is_undefined(args.arch) && is_undefined(args.mname) && is_undefined(args.mver)) {
     arch = child_process.execSync(`uname -m`).toString("utf8");
     mname = child_process.execSync(`${args.tdir}/get_module_name ${args.module}`).toString("utf8");
     mver = child_process.execSync(`${args.tdir}/get_module_version ${args.module}`).toString("utf8");
@@ -24,6 +43,10 @@ if(!args.arch && !arch.mname && !arch.mver) {
     var mname = args.mname;
     var mver = args.mver;
 }
+
+arch = filter_string(arch);
+mname = filter_string(mname);
+mver = filter_string(mver);
 
 if(mname.startsWith("Unknown")) {
     console.log("Error while adding module: " + mname);
@@ -76,6 +99,6 @@ if(!fs.existsSync(`modules/${mname}/${mver}/architectures.json`)) {
     fs.writeFileSync(`modules/${mname}/${mver}/architectures.json`, JSON.stringify(architectures));
 }
 
-child_process.execSync(`cp ${args.module} ./modules/${mname}/${mver}/${arch}/`);
+child_process.execSync(`cp ${args.module} ./modules/${mname}/${mver}/${arch}`);
 
 console.log(`Added ${mname}-${arch} ${mver}`);
