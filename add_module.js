@@ -3,15 +3,27 @@ const child_process = require('child_process');
 var fs = require("fs");
 
 var print_usage = () => {
-    console.log("Usage:\n - --module=<path to module>\n - --tdir=<compiled tools dir>");
+    console.log("Usage:\n - --module=<path to module>\n - --tdir=<compiled tools dir>\n - --arch=<module architecture (optional)>\n - --mname=<module name (with arch option)>\n - --mver=<module version (wth arch option)>");
     process.exit(0);
 }
 
 if(!args.module || !args.tdir) print_usage();
 
-var arch = child_process.execSync(`uname -m`).toString("utf8");
-var mname = child_process.execSync(`${args.tdir}/get_module_name ${args.module}`).toString("utf8");
-var mver = child_process.execSync(`${args.tdir}/get_module_version ${args.module}`).toString("utf8");
+if(args.arch && (!args.mname || !args.mver)) {
+    print_usage();
+}
+
+var arch, mname, mver;
+
+if(!args.arch && !arch.mname && !arch.mver) {
+    arch = child_process.execSync(`uname -m`).toString("utf8");
+    mname = child_process.execSync(`${args.tdir}/get_module_name ${args.module}`).toString("utf8");
+    mver = child_process.execSync(`${args.tdir}/get_module_version ${args.module}`).toString("utf8");
+} else {
+    var arch = args.arch;
+    var mname = args.mname;
+    var mver = args.mver;
+}
 
 if(mname.startsWith("Unknown")) {
     console.log("Error while adding module: " + mname);
