@@ -9,18 +9,7 @@ var print_usage = () => {
 
 if(!args.module || !args.tdir) print_usage();
 
-var arch = process.arch;
-switch(arch) {
-    case "x64": {
-        arch = "x86_64";
-        break;
-    }
-    case "x32": {
-        arch = "x86";
-        break;
-    }
-}
-
+var arch = child_process.execSync(`uname -m`).toString("utf8");
 var mname = child_process.execSync(`${args.tdir}/get_module_name ${args.module}`).toString("utf8");
 var mver = child_process.execSync(`${args.tdir}/get_module_version ${args.module}`).toString("utf8");
 

@@ -1,1 +1,1 @@
-{"supported_architectures":["x86_64","elbrus","arm","arm64"]}
+{"supported_architectures":["x86_64","e2k","armv8l","aarch64"]}
