@@ -45,8 +45,8 @@ if(is_undefined(args.arch) && is_undefined(args.mname) && is_undefined(args.mver
 }
 
 arch = filter_string(arch);
-mname = filter_string(mname);
-mver = filter_string(mver);
+//.mname = filter_string(mname);
+// mver = filter_string(mver);
 
 if(mname.startsWith("Unknown")) {
     console.log("Error while adding module: " + mname);
